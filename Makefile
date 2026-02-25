@@ -12,3 +12,8 @@ logs:
 
 test:
 	docker-compose exec php vendor/bin/phpunit
+
+.PHONY: init
+
+init:
+	docker-compose exec php php init
