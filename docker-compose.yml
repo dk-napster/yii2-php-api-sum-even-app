@@ -1,0 +1,38 @@
+
+services:
+
+  nginx:
+    image: nginx:latest
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - .:/var/www/app
+      - ./docker/nginx/conf.d/app.conf:/etc/nginx/conf.d/app.conf
+    networks:
+      default:
+        aliases:
+          - yii-api-sum-even.loc
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: yii2-php-api
+    volumes:
+      - .:/var/www/app
+    user: "${UID}:${GID}"
+    expose:
+      - 9000
+    env_file:
+      - .env
+    working_dir: /var/www/app
+
+    entrypoint:
+      - "/bin/sh"
+      - "./docker/php/entrypoint.sh"
+    networks:
+      default:
+        aliases:
+          - yii-api-sum-even.loc
